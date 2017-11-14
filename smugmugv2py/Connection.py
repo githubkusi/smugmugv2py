@@ -1,8 +1,8 @@
 #!/usr/bin/python
 
 from rauth import OAuth1Service, OAuth1Session
-from urlparse import urlsplit, urlunsplit, parse_qsl
-from urllib import urlencode
+from urllib.parse import urlsplit, urlunsplit, parse_qsl
+from urllib.parse import urlencode
 from json import loads, dumps
 import requests
 from os import path
@@ -82,7 +82,7 @@ class Connection(object):
 		attempt = 0
 		while True:
 			try:
-				print "Get, attempt: " + str(attempt)
+				print("Get, attempt: " + str(attempt))
 				response=loads(self.__SESSION.get(
 							self.__API_ORIGIN + uri,
 							headers={
@@ -103,7 +103,7 @@ class Connection(object):
 					raise smugmugv2py.SmugMugv2Exception(response["Message"])
 
 			except requests.exceptions.RequestException as e:
-				print "Caught exception " + str(e) + ", attempt: " + str(attempt)
+				print("Caught exception " + str(e) + ", attempt: " + str(attempt))
 				attempt += 1
 				if attempt == 5:
 					raise

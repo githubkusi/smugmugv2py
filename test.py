@@ -19,14 +19,14 @@ def print_album(node, indent):
 	images = album.get_images(connection)
 	for image in images:
 		do_indent(indent+1)
-		print image.filename + " - " + image.caption
+		print(image.filename + " - " + image.caption)
 
 def print_node(node, indent):
 	do_indent(indent)
 	stdout.write("'" + node.name + "' (" + node.type + ") - " + node.privacy)
 	if node.type == "Album":
 		print_album(node, indent)
-	print
+	print()
 	children=node.get_children(connection)
 	for child in children:
 		print_node(child, indent+1)
@@ -39,7 +39,7 @@ connection = Connection(api_key, api_secret, user_agent="Test user agent/2.4")
 if not token or not secret:
 	auth_url = connection.get_auth_url(access="Full", permissions="Modify")
 
-	print "Visit the following URL and retrieve a verification code:%s%s" % (linesep, auth_url)
+	print("Visit the following URL and retrieve a verification code:%s%s" % (linesep, auth_url))
 
 	stdout.write('Enter the six-digit code: ')
 	stdout.flush()
@@ -47,8 +47,8 @@ if not token or not secret:
 
 	at, ats = connection.get_access_token(verifier)
 
-	print "Token: " + at
-	print "Secret: " + ats
+	print("Token: " + at)
+	print("Secret: " + ats)
 
 	token = at
 	secret = ats
@@ -57,7 +57,7 @@ connection.authorise_connection(token, secret)
 
 try:
 	user = User.get_authorized_user(connection)
-	print "User: " + user.nickname + " (" + user.name + ")"
+	print("User: " + user.nickname + " (" + user.name + ")")
 
 	node = Node.get_node(connection,user.node)
 	#print_node(node, 0)
@@ -75,16 +75,16 @@ try:
 		# creating the child folder privately so people can run this test script 'safely'.
 		new_node=node.create_child_album(connection, 'testalbum','Testalbum','Private', 'A long description for the album')
 
-	print new_node.uri + " - " + new_node.name + new_node.album_uri
+	print(new_node.uri + " - " + new_node.name + new_node.album_uri)
 	album=Album.get_album(connection, new_node.album_uri)
 
 	try:
 		pprint(connection.upload_image('adhawkins_github_avatar.jpg',
 											album.uri))
 	except exceptions.ConnectionError as e:
-		print "ConnectionError: " + str(e)
+		print("ConnectionError: " + str(e))
 
-		print "Deleting node after failed upload"
+		print("Deleting node after failed upload")
 		new_node.delete_node(connection)
 
 	#delete_node=Node(node.create_child_folder(connection, 'deletetest','Deletetest','Public'))
@@ -104,5 +104,5 @@ try:
 	#print "Found Renamed Name: " + found_renamed_node.name + ", url: " + found_renamed_node.url_name
 	#pprint(connection.delete(renamed_node.uri))
 except SmugMugv2Exception as e:
-	print "Error: " + str(e)
+	print("Error: " + str(e))
 

@@ -1,4 +1,4 @@
-from AlbumImage import AlbumImage
+from .AlbumImage import AlbumImage
 
 class Album(object):
 	def __init__(self, album):

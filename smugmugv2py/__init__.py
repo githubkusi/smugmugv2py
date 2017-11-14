@@ -1,8 +1,8 @@
-from Connection import Connection
-from User import User
-from Node import Node
-from Album import Album
-from AlbumImage import AlbumImage
+from .Connection import Connection
+from .User import User
+from .Node import Node
+from .Album import Album
+from .AlbumImage import AlbumImage
 
 __all__ = [
 	"Connection",
