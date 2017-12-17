@@ -7,7 +7,6 @@ from json import loads, dumps
 import requests
 from os import path
 from mimetypes import guess_type
-from pprint import pprint
 from pkg_resources import get_distribution
 import smugmugv2py
 
@@ -41,7 +40,8 @@ class Connection(object):
                 authorize_url=self.__AUTHORIZE_URL,
                 base_url=self.BASE_URL)
 
-    def __add_auth_params(self, auth_url, access=None, permissions=None):
+    @staticmethod
+    def __add_auth_params(auth_url, access=None, permissions=None):
         if access is None and permissions is None:
             return auth_url
         parts = urlsplit(auth_url)
@@ -70,7 +70,7 @@ class Connection(object):
     def get_access_token(self, verifier):
         at, ats = self.__SERVICE.get_access_token(self.__rt, self.__rts, params={'oauth_verifier': verifier})
 
-        return (at, ats)
+        return at, ats
 
     def authorise_connection(self, token, token_secret):
         self.__SESSION = OAuth1Session(
