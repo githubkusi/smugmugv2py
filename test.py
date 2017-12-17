@@ -71,9 +71,9 @@ try:
 
     new_node = None
 
-    for thisnode in node.get_children(connection):
-        if thisnode.url_name == "Testalbum":
-            new_node = thisnode
+    for this_node in node.get_children(connection):
+        if this_node.url_name == "Testalbum":
+            new_node = this_node
 
     if new_node is None:
         # creating the child folder privately so people can run this test script 'safely'.
