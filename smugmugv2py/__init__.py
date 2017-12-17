@@ -5,18 +5,18 @@ from .Album import Album
 from .AlbumImage import AlbumImage
 
 __all__ = [
-	"Connection",
-	"SmugMugv2Exception",
-	"User",
-	"Node",
-	"Album",
-	"AlbumImage"
+    "Connection",
+    "SmugMugv2Exception",
+    "User",
+    "Node",
+    "Album",
+    "AlbumImage"
 ]
 
+
 class SmugMugv2Exception(Exception):
-	def __init__(self, message):
-		self.message = message
+    def __init__(self, message):
+        self.message = message
 
-	def __str__(self):
-		return repr(self.message)
-
+    def __str__(self):
+        return repr(self.message)
