@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 from smugmugv2py import Connection, User, Node, Album, AlbumImage, SmugMugv2Exception
 from sys import stdout, stdin

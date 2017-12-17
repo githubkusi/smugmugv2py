@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 from rauth import OAuth1Service, OAuth1Session
 from urllib.parse import urlsplit, urlunsplit, parse_qsl
@@ -117,12 +117,15 @@ class Connection(object):
     def raw_post(self, uri, headers=None, data=None):
         headers['User-Agent'] = self.__user_agent
 
-        response = loads(self.__SESSION.post(
+        request_models_response = self.__SESSION.post(
             uri,
             headers=headers,
             data=data,
             # params={'_verbosity': '1'},
-            header_auth=True).content)
+            header_auth=True)
+
+        content = request_models_response.content
+        response = loads(content.decode("utf-8"))
 
         return response
 
