@@ -154,7 +154,7 @@ class Connection(object):
             headers=headers,
             params={'_verbosity': '1'},
             data=dumps(data),
-            header_auth=True).content)
+            header_auth=True).content.decode())
 
     def upload_image(self, filename, album_uri, caption=None, title=None, keywords=None):
         headers = {
