@@ -3,6 +3,7 @@ from .User import User
 from .Node import Node
 from .Album import Album
 from .AlbumImage import AlbumImage
+from .Image import Image
 
 __all__ = [
     "Connection",
@@ -10,7 +11,8 @@ __all__ = [
     "User",
     "Node",
     "Album",
-    "AlbumImage"
+    "AlbumImage",
+    "Image"
 ]
 
 
