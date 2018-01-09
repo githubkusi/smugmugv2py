@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from smugmugv2py import Connection, User, Node, Album, AlbumImage, SmugMugv2Exception
+from smugmugv2py import Connection, User, Node, Album, AlbumImage, Image, SmugMugv2Exception
 from sys import stdout, stdin
 from os import linesep, path
 from pprint import pprint
@@ -90,12 +90,27 @@ def get_all_image_uris(conn, node):
     return image_uris
 
 
+def get_some_image_uris(conn, node):
+    image_uris = []
+    for child_node in node.get_children(conn):
+        if child_node.type == "Album":
+            album = Album.get_album(conn, child_node.album_uri)
+            images = album.get_images(conn)
+            image_uris = image_uris + get_image_uris(images)
+            return image_uris
+
+
 def main():
     connection = get_authorized_connection(api_key, api_secret, token, secret)
     node = get_root_node(connection)
 
-    image_uris = get_all_image_uris(connection, node)
+    image_uris = get_some_image_uris(connection, node)
     print(image_uris)
+
+    a = Image.get_image(connection, image_uris[0])
+    d = {"Keywords" : "eins"}
+    b = a.change_image(connection, d)
+    print(b)
 
 
 if __name__ == "__main__":
