@@ -71,31 +71,31 @@ def get_root_node(conn):
     return Node.get_node(conn, user.node)
 
 
-def get_image_keys(images):
-    image_keys = []
+def get_image_uris(images):
+    image_uris = []
     for image in images:
-        image_keys.append(image.image_key)
+        image_uris.append(image.uri)
 
-    return image_keys
+    return image_uris
 
 
-def get_all_image_keys(conn, node):
-    image_keys = []
+def get_all_image_uris(conn, node):
+    image_uris = []
     for child_node in node.get_children(conn):
         if child_node.type == "Album":
             album = Album.get_album(conn, child_node.album_uri)
             images = album.get_images(conn)
-            image_keys = image_keys + get_image_keys(images)
+            image_uris = image_uris + get_image_uris(images)
 
-    return image_keys
+    return image_uris
 
 
 def main():
     connection = get_authorized_connection(api_key, api_secret, token, secret)
     node = get_root_node(connection)
 
-    image_keys = get_all_image_keys(connection, node)
-    print(image_keys)
+    image_uris = get_all_image_uris(connection, node)
+    print(image_uris)
 
 
 if __name__ == "__main__":
