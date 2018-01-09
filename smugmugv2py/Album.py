@@ -1,4 +1,5 @@
 from .AlbumImage import AlbumImage
+from .Image import Image
 
 
 class Album(object):
@@ -18,7 +19,7 @@ class Album(object):
     def get_album(cls, connection, album_uri):
         return cls(connection.get(album_uri)["Album"])
 
-    def get_images(self, connection):
+    def get_album_images(self, connection):
         ret = []
 
         if self.image_count:
@@ -26,6 +27,17 @@ class Album(object):
             for image in images:
                 this_image = AlbumImage(image)
                 ret.append(this_image)
+
+        return ret
+
+    def get_images(self, connection):
+        ret = []
+
+        if self.image_count:
+            album_images = connection.get(self.__images)["AlbumImage"]
+            for album_image in album_images:
+                image = Image.from_album_image(album_image)
+                ret.append(image)
 
         return ret
 
