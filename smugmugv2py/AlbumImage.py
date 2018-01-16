@@ -4,8 +4,10 @@ from iso8601 import parse_date
 class AlbumImage(object):
     def __init__(self, image):
         if "Image" in image["Uris"]:
+            # image is endpoint AlbumImage
             self.uri = image["Uris"]["Image"]
         else:
+            # image is endpoint Image
             self.uri = image["Uri"]
 
         self.title = image["Title"]
