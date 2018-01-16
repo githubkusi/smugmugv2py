@@ -25,4 +25,13 @@ class Image(object):
         return connection.delete(self.uri)
 
     def change_image(self, connection, changes):
+        '''
+        :param connection:
+        :param dict changes: example {"Keyword" : "Snow"}
+        :return:
+        '''
         return Image(connection.patch(self.uri, changes)["Response"]["Image"])
+
+    def set_keywords(self, connection, keywords):
+        d = {"KeywordArray": keywords}
+        return self.change_image(connection, d)

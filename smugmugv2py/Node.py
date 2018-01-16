@@ -83,3 +83,11 @@ class Node(object):
 
     def change_node(self, connection, changes):
         return connection.patch(self.uri, changes)["Response"]["Node"]
+
+    @staticmethod
+    def find_node(connection, root_node, name):
+        for node in root_node.get_children(connection):
+            if node.url_name == name:
+                return node
+
+        return None

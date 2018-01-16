@@ -15,6 +15,7 @@ class AlbumImage(object):
         self.keywords = image["Keywords"]
         self.filename = image["FileName"]
         self.archived_size = image["ArchivedSize"]
+        self.image_key = image["ImageKey"]
         self.last_updated = parse_date(image["LastUpdated"]).replace(tzinfo=None)
 
     @classmethod
