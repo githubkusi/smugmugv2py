@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+#nodeid: 67btMX
+
 from smugmugv2py import Connection, User, Node, Album, AlbumImage, Image, SmugMugv2Exception
 from sys import stdout, stdin
 from os import linesep, path
@@ -105,13 +107,9 @@ def set_keywords(connection, uri, keywords):
     connection.patch(uri, kw)["Response"]["Image"]
 
 
-def
-
-
 def upload_image(conn, root_node, filename, album_name):
-
-    root_node.find_node()
-    conn.upload_image(filename, album_uri)
+    album = root_node.find_node(album_name)
+    conn.upload_image(filename, album.uri)
 
 
 def get_node(connection, root_node, name):
@@ -123,17 +121,37 @@ def get_node(connection, root_node, name):
     raise ValueError(name + ' not found')
 
 
+def get_node_recursive(conn
 
 
+
+def get_digikam_node(connection):
+    node = get_root_node(connection)
+    return get_node(connection, 'Digikam')
+
+
+def get_album_uri_from_url_path(connection, root_node, url_path):
+    for node in root_node.get_children(connection):
+        if node.type == "Folder":
+            album_uri = get_album_uri_from_url_path(connection, node, url_path)
+            if album_uri is not None:
+                return album_uri
+
+        if node.type == "Album":
+            for n in node.get_children(connection):
+                if node.url_path == url_path
+                    return node.album_uri
 
 
 def main():
     connection = get_authorized_connection(api_key, api_secret, token, secret)
-    node = get_root_node(connection)
+    root_node = get_root_node(connection)
 
-    node_tf = get_node(connection, node, 'Testfolder')
-    node_ta = get_node(connection, node_tf, 'Testalbum')
-    connection.upload_image('adhawkins_github_avatar.jpg', node_ta.uri)
+    # node_tf = get_node(connection, node, 'Testfolder')
+    # node_ta = get_node(connection, node_tf, 'Testalbum')
+    # connection.upload_image('adhawkins_github_avatar.jpg', node_ta.uri)
+
+    get_album_uri_from_url_path(connection, root_node, "/Testfolder/Hidden")
 
     image_uris = get_some_image_uris(connection, node)
     print(image_uris)
