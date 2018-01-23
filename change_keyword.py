@@ -10,6 +10,7 @@ from test_setup import api_key, api_secret, token, secret
 from datetime import datetime
 from json import dumps
 from requests import exceptions
+from smugmugv2py import Digikam
 
 
 def do_indent(indent):
@@ -121,37 +122,56 @@ def get_node(connection, root_node, name):
     raise ValueError(name + ' not found')
 
 
-def get_node_recursive(conn
-
-
-
 def get_digikam_node(connection):
-    node = get_root_node(connection)
-    return get_node(connection, 'Digikam')
+    root_node = get_root_node(connection)
+    return get_node(connection, root_node, 'Digikam')
 
 
 def get_album_uri_from_url_path(connection, root_node, url_path):
     for node in root_node.get_children(connection):
+        print(node.url_path)
         if node.type == "Folder":
             album_uri = get_album_uri_from_url_path(connection, node, url_path)
             if album_uri is not None:
                 return album_uri
 
         if node.type == "Album":
-            for n in node.get_children(connection):
-                if node.url_path == url_path
-                    return node.album_uri
+            if node.url_path == url_path:
+                return node.album_uri
+
+    return None
+
+
+def get_folder_node_from_name(connection, url_name, root_node):
+    for node in root_node.get_children(connection):
+        if node.type == "Folder":
+            found_node = get_folder_node_from_name(connection, url_name, node)
+            if found_node.url_name == url_name:
+                return found_node
+    return None
 
 
 def main():
     connection = get_authorized_connection(api_key, api_secret, token, secret)
-    root_node = get_root_node(connection)
+    dk_node = get_digikam_node(connection)
+
+    conn_dk, cursor = Digikam.get_connection_and_cursor(
+        user='dkuser',
+        passwd='dkpasswd',
+        db='digikam_devel_core')
+    images_id = Digikam.get_unsynced_image_id(cursor)
+    for image_id in images_id:
+        album_url_path, image_name = Digikam.get_url_path(cursor, image_id)
+        album_uri = get_album_uri_from_url_path(connection, dk_node, album_url_path)
+        # if album_uri is None:
+
+
 
     # node_tf = get_node(connection, node, 'Testfolder')
     # node_ta = get_node(connection, node_tf, 'Testalbum')
     # connection.upload_image('adhawkins_github_avatar.jpg', node_ta.uri)
 
-    get_album_uri_from_url_path(connection, root_node, "/Testfolder/Hidden")
+    album_uri = get_album_uri_from_url_path(connection, root_node, "/Testfolder/Hidden")
 
     image_uris = get_some_image_uris(connection, node)
     print(image_uris)

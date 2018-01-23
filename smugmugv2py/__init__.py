@@ -4,6 +4,7 @@ from .Node import Node
 from .Album import Album
 from .AlbumImage import AlbumImage
 from .Image import Image
+from .Digikam import Digikam
 
 __all__ = [
     "Connection",
@@ -12,7 +13,8 @@ __all__ = [
     "Node",
     "Album",
     "AlbumImage",
-    "Image"
+    "Image",
+    "Digikam"
 ]
 
 
