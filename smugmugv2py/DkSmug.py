@@ -1,5 +1,6 @@
 from os import path
 from .Album import Album
+from .Node import Node
 
 class DkSmug:
     def __init__(self):
@@ -10,6 +11,7 @@ class DkSmug:
         # if url_path in cache.keys():
         #     return node.get_node(cache[url_path])
 
+        print(url_path)
         s = url_path.split('/')
         folder_names = s[1:]
 
@@ -25,13 +27,14 @@ class DkSmug:
         return node
 
     @staticmethod
-    def get_or_create_album_from_album_name(connection, node, url_name):
+    def get_or_create_album_from_album_name(connection, node_uri, url_name):
         '''
         :param connection:
         :param node:
         :param url_name: /Testfolder/SubfolderUrl/AlbumUrl
         :return:
         '''
+        node = Node.get_node(connection, node_uri)
         album_node = node.find_node_by_url_name(connection, url_name)
         if album_node is None:
             album_node = node.create_child_album(connection, url_name, url_name, 'Private')
@@ -46,7 +49,7 @@ class DkSmug:
         else:
             folder_node = self.get_or_create_node_from_folder_path(connection, node, folder_path)
 
-        return self.get_or_create_album_from_album_name(connection, folder_node, album_name)
+        return self.get_or_create_album_from_album_name(connection, folder_node.uri, album_name)
 
     # @staticmethod
     # def image_exists(image_id, connection):

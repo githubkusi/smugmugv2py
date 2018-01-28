@@ -166,7 +166,7 @@ def main():
         passwd='dkpasswd',
         db='digikam_devel_core')
 
-    connection.get_code('/api/v2/image/rvNZsjK')
+    # connection.get_code('/api/v2/image/rvNZsjK')
 
     images_id = Digikam.get_unsynced_image_id(cursor)
 
@@ -187,8 +187,8 @@ def main():
 
         else:
             print("upload image {} to album {}".format(image_name, album_node.name))
-            image = Image(connection.upload_image(file_path, album_node.uri))
-            Digikam.add_image_to_photosharing(image_id, image.uri)
+            response = connection.upload_image(file_path, album_node.uri)
+            Digikam.add_image_to_photosharing(conn_dk, cursor, image_id, response["Image"]["AlbumImageUri"])
 
 
     #

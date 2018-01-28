@@ -47,12 +47,13 @@ class Digikam:
     #
 
     @staticmethod
-    def add_image_to_photosharing(cursor, image_id, remote_id):
+    def add_image_to_photosharing(conn_dk, cursor, image_id, remote_id):
         query = """
                 INSERT INTO PhotoSharing (imageid,remoteid)
-                VALUES ({},{});
+                VALUES ({},"{}");
                 """.format(image_id, remote_id)
         cursor.execute(query)
+        conn_dk.commit()
         return cursor.fetchone()
 
 
