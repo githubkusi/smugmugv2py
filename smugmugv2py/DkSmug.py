@@ -45,12 +45,15 @@ class DkSmug:
             folder_node = node
         else:
             folder_node = self.get_or_create_node_from_folder_path(connection, node, folder_path)
-            
+
         return self.get_or_create_album_from_album_name(connection, folder_node, album_name)
+
+    # @staticmethod
+    # def image_exists(image_id, connection):
 
     def upload_image(self, connection, root_node, file_path, album_url_path):
         album_node = self.get_or_create_album_from_album_path(connection, root_node, album_url_path)
         # album = Album.get_album(connection, album)
-        a = connection.upload_image(file_path, album_node.uri)
-        print(a)
+        return connection.upload_image(file_path, album_node.uri)
+
 

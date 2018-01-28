@@ -165,6 +165,9 @@ def main():
         user='dkuser',
         passwd='dkpasswd',
         db='digikam_devel_core')
+
+    connection.get_code('/api/v2/image/rvNZsjK')
+
     images_id = Digikam.get_unsynced_image_id(cursor)
 
     # Node.get_node(connection, '/api/v2/node/gQ5JpD')
@@ -172,35 +175,45 @@ def main():
     root_path = '/tmp/digikam-debug-pics'
     dks = DkSmug()
     for image_id in images_id:
-        album_url_path, image_name = Digikam.get_url_path(cursor, image_id)
+        album_url_path, image_name = Digikam.get_album_url_path_and_image_name(cursor, image_id)
         file_path = os.path.join(root_path + album_url_path, image_name)
-        dks.upload_image(connection, dk_node, file_path, album_url_path)
+        album_node = dks.get_or_create_album_from_album_path(connection, dk_node, album_url_path)
+
+        album_images = album_node.get_album_images(connection)
+        file_names = [album_image.filename for album_image in album_images]
+
+        if image_name in file_names:
+            print("{} already in album {}, skipping".format(image_name, album_node.name))
+
+        else:
+            print("upload image {} to album {}".format(image_name, album_node.name))
+            image = Image(connection.upload_image(file_path, album_node.uri))
+            Digikam.add_image_to_photosharing(image_id, image.uri)
 
 
-
-
-    for image_id in images_id:
-        album_url_path, image_name = Digikam.get_url_path(cursor, image_id)
-        album_uri = get_album_uri_from_url_path(connection, dk_node, album_url_path)
-        # if album_uri is None:
-
-
-
-    # node_tf = get_node(connection, node, 'Testfolder')
-    # node_ta = get_node(connection, node_tf, 'Testalbum')
-    # connection.upload_image('adhawkins_github_avatar.jpg', node_ta.uri)
-
-    album_uri = get_album_uri_from_url_path(connection, root_node, "/Testfolder/Hidden")
-
-    image_uris = get_some_image_uris(connection, node)
-    print(image_uris)
-
-    a = Image.get_image(connection, image_uris[0])
-    keywords = ['kw1', 'kw2']
-    b = a.set_keywords(connection, keywords)
-
-
-    print(b)
+    #
+    # for image_id in images_id:
+    #     album_url_path, image_name = Digikam.get_url_path(cursor, image_id)
+    #     album_uri = get_album_uri_from_url_path(connection, dk_node, album_url_path)
+    #     # if album_uri is None:
+    #
+    #
+    #
+    # # node_tf = get_node(connection, node, 'Testfolder')
+    # # node_ta = get_node(connection, node_tf, 'Testalbum')
+    # # connection.upload_image('adhawkins_github_avatar.jpg', node_ta.uri)
+    #
+    # album_uri = get_album_uri_from_url_path(connection, root_node, "/Testfolder/Hidden")
+    #
+    # image_uris = get_some_image_uris(connection, node)
+    # print(image_uris)
+    #
+    # a = Image.get_image(connection, image_uris[0])
+    # keywords = ['kw1', 'kw2']
+    # b = a.set_keywords(connection, keywords)
+    #
+    #
+    # print(b)
 
 
 if __name__ == "__main__":

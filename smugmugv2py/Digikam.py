@@ -13,7 +13,7 @@ class Digikam:
         return con, cursor
 
     @staticmethod
-    def get_url_path(cursor, image_id):
+    def get_album_url_path_and_image_name(cursor, image_id):
         query = """
         select Albums.relativePath, Images.name from Images, Albums 
         where Images.id = {} and 
@@ -35,23 +35,24 @@ class Digikam:
         images_id = [x[0] for x in rows]
         return images_id
 
+    # @staticmethod
+    # def get_root_path(self):
+    #     query = """
+    #             select Albums.relativePath, Images.name from Images, Albums
+    #             where Images.id = %{:d} and
+    #             Albums.id = Images.album
+    #             """.format(image_id)
+    #     cursor.execute(query)
+    #     return cursor.fetchone()
+    #
+
     @staticmethod
-    def get_filepath(cursor, image_id):
+    def add_image_to_photosharing(cursor, image_id, remote_id):
         query = """
-        select Albums.relativePath, Images.name from Images, Albums 
-        where Images.id = %{:d} and 
-        Albums.id = Images.album 
-        """.format(image_id)
+                INSERT INTO PhotoSharing (imageid,remoteid)
+                VALUES ({},{});
+                """.format(image_id, remote_id)
         cursor.execute(query)
         return cursor.fetchone()
 
-    @staticmethod
-    def get_root_path(self):
-        query = """
-                select Albums.relativePath, Images.name from Images, Albums 
-                where Images.id = %{:d} and 
-                Albums.id = Images.album 
-                """.format(image_id)
-        cursor.execute(query)
-        return cursor.fetchone()
 
