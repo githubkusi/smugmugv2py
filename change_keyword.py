@@ -10,7 +10,8 @@ from test_setup import api_key, api_secret, token, secret
 from datetime import datetime
 from json import dumps
 from requests import exceptions
-from smugmugv2py import Digikam
+from smugmugv2py import Digikam, DkSmug
+import os
 
 
 def do_indent(indent):
@@ -142,11 +143,16 @@ def get_album_uri_from_url_path(connection, root_node, url_path):
     return None
 
 
-def get_folder_node_from_name(connection, url_name, root_node):
+def get_album_node_from_url_path(connection, root_node, url_path):
+    # extract first folder
+    folder, album = os.path.split(url_path)
+
+
+def get_folder_node_from_url_path(connection, url_path, root_node):
     for node in root_node.get_children(connection):
         if node.type == "Folder":
-            found_node = get_folder_node_from_name(connection, url_name, node)
-            if found_node.url_name == url_name:
+            found_node = get_folder_node_from_url_path(connection, url_path, node)
+            if found_node.url_path == url_path:
                 return found_node
     return None
 
@@ -160,6 +166,19 @@ def main():
         passwd='dkpasswd',
         db='digikam_devel_core')
     images_id = Digikam.get_unsynced_image_id(cursor)
+
+    # Node.get_node(connection, '/api/v2/node/gQ5JpD')
+
+    root_path = '/tmp/digikam-debug-pics'
+    dks = DkSmug()
+    for image_id in images_id:
+        album_url_path, image_name = Digikam.get_url_path(cursor, image_id)
+        file_path = os.path.join(root_path + album_url_path, image_name)
+        dks.upload_image(connection, dk_node, file_path, album_url_path)
+
+
+
+
     for image_id in images_id:
         album_url_path, image_name = Digikam.get_url_path(cursor, image_id)
         album_uri = get_album_uri_from_url_path(connection, dk_node, album_url_path)

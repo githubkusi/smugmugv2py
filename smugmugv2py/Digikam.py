@@ -1,5 +1,5 @@
 import MySQLdb as Mdb
-
+import os
 
 class Digikam:
     def __init__(self):
@@ -16,7 +16,7 @@ class Digikam:
     def get_url_path(cursor, image_id):
         query = """
         select Albums.relativePath, Images.name from Images, Albums 
-        where Images.id = %{:d} and 
+        where Images.id = {} and 
         Albums.id = Images.album 
         """.format(image_id)
         cursor.execute(query)
@@ -36,10 +36,22 @@ class Digikam:
         return images_id
 
     @staticmethod
-    def split_folder_album(path):
-        s = path.split('/')
-        folders = s[0:-1]
-        album = s[-1]
-        return folders, album
+    def get_filepath(cursor, image_id):
+        query = """
+        select Albums.relativePath, Images.name from Images, Albums 
+        where Images.id = %{:d} and 
+        Albums.id = Images.album 
+        """.format(image_id)
+        cursor.execute(query)
+        return cursor.fetchone()
 
+    @staticmethod
+    def get_root_path(self):
+        query = """
+                select Albums.relativePath, Images.name from Images, Albums 
+                where Images.id = %{:d} and 
+                Albums.id = Images.album 
+                """.format(image_id)
+        cursor.execute(query)
+        return cursor.fetchone()
 

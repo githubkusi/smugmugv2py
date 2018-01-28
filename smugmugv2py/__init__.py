@@ -5,6 +5,7 @@ from .Album import Album
 from .AlbumImage import AlbumImage
 from .Image import Image
 from .Digikam import Digikam
+from .DkSmug import DkSmug
 
 __all__ = [
     "Connection",
@@ -14,7 +15,8 @@ __all__ = [
     "Album",
     "AlbumImage",
     "Image",
-    "Digikam"
+    "Digikam",
+    "DkSmug"
 ]
 
 

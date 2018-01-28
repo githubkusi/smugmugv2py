@@ -111,6 +111,7 @@ class Node(object):
         return connection.post(self.__child_nodes, data=dumps(params), headers=headers)
 
     def create_child_folder(self, connection, name, url, privacy, description=None):
+        # url needs to start with a capital letter or number
         response = self.__create_child_node(connection, 'Folder', name, url, privacy, description)
 
         if "Node" not in response["Response"]:
@@ -132,10 +133,16 @@ class Node(object):
     def change_node(self, connection, changes):
         return connection.patch(self.uri, changes)["Response"]["Node"]
 
-    @staticmethod
-    def find_node(connection, root_node, name):
-        for node in root_node.get_children(connection):
-            if node.url_name == name:
+    def find_node_by_url_name(self, connection, url_name):
+        for node in self.get_children(connection):
+            if node.url_name == url_name:
+                return node
+
+        return None
+
+    def find_album_by_url_name(self, connection, url_name):
+        for node in self.get_children(connection):
+            if node.url_name == url_name:
                 return node
 
         return None
